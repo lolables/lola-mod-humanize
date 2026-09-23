@@ -1,0 +1,23 @@
+tests/test_sentence_lane.py
+  s_a1358a781ec6ee::t_da43b680311124 210-222
+  s_a1358a781ec6ee::t_97d3c99932a8eb 133-140
+module/skills/humanize/scripts/pre-scan.py
+  s_a1358a781ec6ee::t_7d5bcde897a711 580,582,584-593
+  s_a1358a781ec6ee::t_81116c5f243329 446-452
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "fc0e7126177daf819630519a5e418b072d26338f",
+  "prompts": {},
+  "sessions": {
+    "s_a1358a781ec6ee": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ad39c66a-e089-4e06-aecc-0c4296bec288",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "LLM (riotbox) <llm@riotbox>"
+    }
+  }
+}
