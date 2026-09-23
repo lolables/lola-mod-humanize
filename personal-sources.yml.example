@@ -1,0 +1,69 @@
+# personal-sources.yml -- Your writing samples for voice calibration.
+#
+# Place this file in one of these locations (checked in order):
+#   1. $XDG_CONFIG_HOME/humanize/personal-sources.yml  (~/.config/humanize/)
+#   2. personal-sources.yml                          (repo root, gitignored)
+#
+# Used by scripts/update-sources.sh to calibrate the Humanize voice profile.
+#
+# IMPORTANT: Only include human-authored content. Do NOT include
+# AI-tooling repos, LLM-generated docs, or co-authored content where
+# the AI did most of the writing. The contamination checker will flag
+# these.
+#
+# Slugs for voice sources MUST start with "voice-" (this triggers the
+# contamination checker).
+#
+# Two source types are supported:
+#
+#   url:  -- fetched via curl (blogs, GitHub profiles, published articles)
+#   path: -- read from local filesystem (files or directories)
+#
+# Supported file formats:
+#   Always:    .md .txt .rst .adoc .html .htm .org
+#   pdftotext: .pdf           (install: apt/dnf install poppler-utils)
+#   pandoc:    .docx .odt .epub .rtf .tex .latex  (install: apt/dnf install pandoc)
+#
+# For directories, all supported files are found recursively, text is
+# extracted, and concatenated into a single document for analysis.
+# Unsupported formats are skipped with a warning.
+#
+# Check what your system supports: python3 scripts/extract-text.py --capabilities
+
+sources:
+  # --- Example: Remote sources (fetched via curl) ---
+
+  # - slug: voice-blog
+  #   url: https://trevor-vaughan.github.io/
+  #   description: Personal blog posts
+
+  # - slug: voice-github
+  #   url: https://github.com/trevor-vaughan
+  #   description: GitHub profile (pre-LLM-era repos, excludes AI tooling)
+
+  # --- Example: Local sources (read from filesystem) ---
+
+  # - slug: voice-blog-posts
+  #   path: ~/writing/blog-posts/
+  #   description: Pre-2023 blog posts directory
+
+  # - slug: voice-talks
+  #   path: ~/writing/talks/
+  #   description: Conference talk transcripts and slide notes
+
+  # - slug: voice-thesis
+  #   path: ~/Documents/thesis.md
+  #   description: Graduate thesis
+
+  # Good local sources:
+  # - Directories of blog post drafts or published articles
+  # - Conference talk scripts or transcripts
+  # - Technical reports, white papers, or design docs
+  # - Pre-LLM-era project READMEs and documentation
+  # - Email archives exported as text (scrub recipients first)
+  # - Old code review comments exported from GitHub/GitLab
+  #
+  # Bad sources (will be flagged by contamination checker):
+  # - AI-tooling repos (claude-*, gpt-*, llm-*, copilot, etc.)
+  # - Documentation known to be AI-generated
+  # - Content written after 2023 without human verification

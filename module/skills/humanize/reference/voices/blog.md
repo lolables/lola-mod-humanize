@@ -1,0 +1,1 @@
+../../../../../reference/voices/blog.md

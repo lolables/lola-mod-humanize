@@ -1,0 +1,68 @@
+name: lola install
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [claude-code, opencode]
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install lola from main
+        run: uv tool install --force git+https://github.com/LobsterTrap/lola
+
+      - name: Stage working tree (lola's mod-add walker reads git ls-files)
+        run: |
+          git config user.email ci@example
+          git config user.name ci
+          git add -A
+
+      - name: Install module
+        env:
+          TARGET: ${{ matrix.target }}
+        run: |
+          lola mod add -n humanize ./
+          lola install humanize -a "$TARGET" --scope user -f
+
+      - name: Verify install destination
+        env:
+          TARGET: ${{ matrix.target }}
+        run: |
+          case "$TARGET" in
+            claude-code)
+              test -f ~/.claude/skills/humanize/SKILL.md
+              test -f ~/.claude/skills/voice-profile-generator/SKILL.md
+              # voice-profile-generator's scripts are symlinks in the source tree but
+              # lola resolves and copies the targets — they should be real files here
+              test -f ~/.claude/skills/voice-profile-generator/scripts/analyze-voice.py
+              test -f ~/.claude/skills/voice-profile-generator/scripts/extract-text.py
+              test -f ~/.claude/skills/voice-profile-generator/scripts/vocabulary.py
+              grep -q '<!-- lola:module:humanize:start -->' ~/.claude/CLAUDE.md
+              ;;
+            opencode)
+              # lola installs opencode's user-scope instructions at the XDG
+              # config path, not ~/AGENTS.md (see lola config.get_user_config_dir).
+              grep -q '<!-- lola:module:humanize:start -->' "${XDG_CONFIG_HOME:-$HOME/.config}/opencode/AGENTS.md"
+              ;;
+          esac
+
+      - name: Uninstall
+        env:
+          TARGET: ${{ matrix.target }}
+        run: |
+          lola uninstall humanize -a "$TARGET" --scope user
+          # Deregister only once nothing has the module installed anywhere:
+          # `lola mod rm` does not remove installs, and running it early
+          # orphans managed-section markers on other hosts.
+          lola list | grep -q '^humanize$' || lola mod rm -f humanize

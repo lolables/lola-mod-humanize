@@ -1,0 +1,34 @@
+# tests/fixtures/git/hermetic.gitconfig
+#
+# Hermetic git configuration used by the test harness. tests/conftest.py
+# points GIT_CONFIG_GLOBAL and GIT_CONFIG_SYSTEM at this file so the
+# developer's ~/.gitconfig and the host's /etc/gitconfig cannot leak
+# into tests. A leaking commit.gpgsign or core.hooksPath would block
+# `git commit` on a captured stdin and hang the test forever.
+#
+# Anything that could (a) prompt for input, (b) touch the network, or
+# (c) run a hook or filter that we do not control must be explicitly
+# neutralized here, even when git's default is already safe -- defense
+# in depth in case a future git version changes its defaults.
+
+[init]
+	defaultBranch = main
+
+[commit]
+	gpgsign = false
+
+[tag]
+	gpgsign = false
+
+[gpg]
+	# If commit.gpgsign somehow becomes true (e.g. via `-c` on the
+	# command line), /bin/true reports success without launching
+	# gpg-agent and avoids the pinentry-prompt-on-captured-stdin hang.
+	program = /bin/true
+
+[core]
+	# Inert pager; never spawns less/more, never tries to read termcaps.
+	pager = cat
+
+[advice]
+	detachedHead = false

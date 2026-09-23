@@ -1,0 +1,329 @@
+version: '3'
+
+vars:
+  MODE: '{{.MODE | default "human"}}'
+  SKILL_DIR: module/skills/humanize
+  S: module/skills/humanize/scripts
+
+tasks:
+  default:
+    silent: true
+    desc: Grouped map of the common workflows
+    cmd: |
+      cat <<'EOF'
+      humanize task map. Grouped by what you are trying to do.
+      Run `task --list-all` for every target, including the ones omitted here.
+
+      GET SET UP
+        task setup                 install dev dependencies via uv
+        task doctor                check that those dependencies are in place
+                                   MODE=llm to print only what is wrong
+
+        Installing the module into an assistant is a lola job, not a task
+        target. See Installation in README.md.
+
+      USE IT
+        task scan                  mechanical pre-scan of the repo
+                                   DIFF=true limits it to lines changed vs main
+        task voices -- ls          list voice profiles and which are overridden
+        task voices -- check blog  validate one profile (or all, with no name)
+        task voices:profile FROM=<path>
+                                   build a profile from your own writing
+
+      UPDATE FROM UPSTREAM       see docs/UPDATING.md before the third one
+        task sources               fetch and analyze sources. Changes nothing tracked.
+        task watchlist AUTO=true   preview vocabulary candidates. Changes nothing.
+        task watchlist             interactive. WRITES the watchlist, and leaves
+                                   manual follow-up that tests check.
+        task vocab:sync            regenerate every copy derived from the watchlist
+        task vocab:check           verify those copies are current. Part of lint.
+
+      CHECK YOUR WORK
+        task lint                  reference files and module layout present
+        task test:python           unit tests, fast
+        task check                 everything. Includes test:detect, which runs
+                                   model inference and is slow without a GPU.
+
+      RESEARCH AND TUNING
+        task eval                  score Ollama models on the humanize bar
+        task improve               detection analysis plus improvement candidates
+        task review-candidates     review and apply those candidates
+      EOF
+
+  doctor:
+    desc: Check that required tooling and Python dependencies are present (MODE=llm for problems only)
+    cmd: bash scripts/check-deps.sh --mode {{.MODE}} .
+
+  setup:
+    desc: Install dev dependencies via uv
+    cmds:
+      - uv venv --quiet .venv 2>/dev/null || true
+      - uv pip install --python .venv/bin/python3 pytest pytest-cov fpdf2
+      - |
+        if .venv/bin/python3 -c "import torch" 2>/dev/null; then
+          echo "GPU deps: torch found, installing ai-detect extras..."
+          uv pip install --python .venv/bin/python3 transformers accelerate
+        else
+          echo "GPU deps: torch not found. AI detection tests will be skipped."
+          echo "  To enable: uv pip install --python .venv/bin/python3 torch transformers accelerate"
+        fi
+
+  test:
+    desc: Run all tests (MODE=human for verbose, MODE=llm for errors-only)
+    cmds:
+      - task: test:text
+      - task: test:code
+      - task: test:python
+
+  test:text:
+    desc: Validate text transformation samples
+    cmds:
+      - |
+        echo "=== Text Transformation Tests ==="
+        PASS=0; FAIL=0; TOTAL=0
+        for sample in tests/text-samples/*.before.md; do
+          [ -f "$sample" ] || continue
+          TOTAL=$((TOTAL + 1))
+          base=$(basename "$sample" .before.md)
+          after="tests/text-samples/${base}.after.md"
+          rules="tests/text-samples/${base}.rules.md"
+          if [ -f "$after" ] && [ -f "$rules" ]; then
+            PASS=$((PASS + 1))
+            if [ "{{.MODE}}" = "human" ]; then
+              echo "  PASS: $base"
+            fi
+          else
+            FAIL=$((FAIL + 1))
+            echo "  FAIL: $base (missing .after.md or .rules.md)"
+          fi
+        done
+        echo "---"
+        echo "Text samples: $TOTAL total, $PASS pass, $FAIL fail"
+        [ "$FAIL" -eq 0 ] || exit 1
+
+  test:code:
+    desc: Validate code transformation samples
+    cmds:
+      - |
+        echo "=== Code Transformation Tests ==="
+        PASS=0; FAIL=0; TOTAL=0
+        for sample in tests/code-samples/*.before.*; do
+          [ -f "$sample" ] || continue
+          TOTAL=$((TOTAL + 1))
+          ext="${sample##*.before.}"
+          base=$(echo "$sample" | sed "s/\.before\.${ext}$//")
+          after="${base}.after.${ext}"
+          rules="${base}.rules.md"
+          if [ -f "$after" ] && [ -f "$rules" ]; then
+            PASS=$((PASS + 1))
+            if [ "{{.MODE}}" = "human" ]; then
+              echo "  PASS: $(basename "$base")"
+            fi
+          else
+            FAIL=$((FAIL + 1))
+            echo "  FAIL: $(basename "$base") (missing .after or .rules)"
+          fi
+        done
+        echo "---"
+        echo "Code samples: $TOTAL total, $PASS pass, $FAIL fail"
+        [ "$FAIL" -eq 0 ] || exit 1
+
+  test:python:
+    desc: Run Python unit tests (with coverage if pytest-cov is installed)
+    cmds:
+      - |
+        PY=python3
+        [ -x .venv/bin/python3 ] && PY=.venv/bin/python3
+        COV_ARGS=""
+        if $PY -c "import pytest_cov" 2>/dev/null; then
+          mkdir -p .test-output/coverage
+          COV_ARGS="--cov=scripts --cov={{.S}} --cov-report=term-missing --cov-report=html:.test-output/coverage"
+        fi
+        if [ "{{.MODE}}" = "llm" ]; then
+          $PY -m pytest tests/ --tb=short -q $COV_ARGS 2>&1 | tail -20
+        else
+          $PY -m pytest tests/ -v --tb=short $COV_ARGS
+        fi
+
+  test:detect:
+    desc: Run AI detection tests (requires GPU + ai-detect extras)
+    cmds:
+      - |
+        PY=python3
+        [ -x .venv/bin/python3 ] && PY=.venv/bin/python3
+        $PY -m pytest tests/test_detection.py -v --tb=short
+
+  lint:
+    desc: Check reference files and module structure for completeness
+    cmds:
+      - |
+        echo "=== Reference File Lint ==="
+        MISSING=0
+        # Non-voice references are individually required.
+        for f in reference/ai-vocabulary-watchlist.md reference/structural-patterns.md \
+                 reference/code-patterns.md reference/methodology.md \
+                 reference/courtesy.md reference/writing-discipline.md \
+                 module/skills/humanize/reference/writing-discipline.md \
+                 module/AGENTS.md \
+                 module/skills/humanize/SKILL.md \
+                 module/skills/voice-profile-generator/SKILL.md \
+                 README.md .gitignore; do
+          if [ ! -f "$f" ]; then
+            echo "  MISSING: $f"; MISSING=$((MISSING + 1))
+          elif [ ! -s "$f" ]; then
+            echo "  EMPTY: $f"; MISSING=$((MISSING + 1))
+          else
+            echo "  OK: $f"
+          fi
+        done
+        # Voices are discovered, not hardcoded.
+        for f in reference/voices/*.md; do
+          [ -e "$f" ] || { echo "  MISSING: reference/voices/*.md (none found)"; MISSING=$((MISSING + 1)); break; }
+          case "$f" in *.local.md) continue;; esac
+          if [ ! -s "$f" ]; then
+            echo "  EMPTY: $f"; MISSING=$((MISSING + 1))
+          else
+            echo "  OK: $f"
+          fi
+        done
+        echo "---"
+        [ "$MISSING" -eq 0 ] && echo "All reference and module files present." || { echo "$MISSING files missing/empty"; exit 1; }
+      - |
+        echo "=== Generated Vocabulary Lint ==="
+        PY=python3; [ -x .venv/bin/python3 ] && PY=.venv/bin/python3
+        $PY scripts/sync_vocabulary.py --check && echo "  OK: derived files match the watchlist"
+
+  sources:
+    desc: 'Fetch + analyze internet sources. STAGE=fetch|analyze for one stage.'
+    vars:
+      STAGE: '{{.STAGE | default "all"}}'
+    cmds:
+      - |
+        case "{{.STAGE}}" in
+          fetch)   ./scripts/update-sources.sh --fetch-only ;;
+          analyze) ./scripts/update-sources.sh --analyze ;;
+          *)       ./scripts/update-sources.sh {{.CLI_ARGS}} ;;
+        esac
+
+  watchlist:
+    desc: 'Add vocabulary candidates to the watchlist. AUTO=true to list only.'
+    cmds:
+      - |
+        PY=python3; [ -x .venv/bin/python3 ] && PY=.venv/bin/python3
+        FLAG=""; [ "{{.AUTO}}" = "true" ] && FLAG="--auto"
+        $PY scripts/update-watchlist.py $FLAG {{.CLI_ARGS}}
+
+  voices:profile:
+    desc: 'Generate a voice profile. FROM=path/dir (default: fetched sources).'
+    cmds:
+      - |
+        PY=python3; [ -x .venv/bin/python3 ] && PY=.venv/bin/python3
+        FROM="{{.FROM}}"
+        if [ -z "$FROM" ]; then
+          FROM=".test-output/update-report/fetched"
+          [ -d "$FROM" ] || { echo "No fetched sources. Run 'task sources' or pass FROM=path."; exit 1; }
+        fi
+        $PY scripts/analyze-voice.py "$FROM" {{.CLI_ARGS}}
+
+  voices:
+    desc: Manage installed voice profiles (ls, cat, path, rm, check)
+    cmds:
+      - |
+        PY=python3
+        [ -x .venv/bin/python3 ] && PY=.venv/bin/python3
+        $PY {{.S}}/manage-voices.py {{.CLI_ARGS}}
+
+  eval:
+    desc: 'Run Humanize evaluation across Ollama models. VERBOSE=true for detail.'
+    vars:
+      OLLAMA_HOST: '{{.OLLAMA_HOST | default "localhost"}}'
+      OLLAMA_PORT: '{{.OLLAMA_PORT | default "11434"}}'
+      VERBOSE: '{{.VERBOSE | default ""}}'
+    cmds:
+      - |
+        FLAG=""
+        [ "{{.VERBOSE}}" = "true" ] && FLAG="-v"
+        python3 scripts/ollama-eval.py --host {{.OLLAMA_HOST}} --port {{.OLLAMA_PORT}} $FLAG {{.CLI_ARGS}}
+
+  eval:detect:
+    desc: 'Detection analysis on samples (no Ollama). SIZE=large for bigger models (needs GPU).'
+    vars:
+      SIZE: '{{.SIZE | default "small"}}'
+    cmds:
+      - |
+        PY=python3
+        [ -x .venv/bin/python3 ] && PY=.venv/bin/python3
+        if [ "{{.SIZE}}" = "large" ]; then
+          # Binoculars needs models from the SAME family, different sizes.
+          # EleutherAI GPT-Neo: ungated, standard arch, reliable. Sequential
+          # mode loads one at a time so each fits in ~10GB VRAM.
+          export BINOCULARS_OBSERVER=EleutherAI/gpt-neo-1.3B
+          export BINOCULARS_PERFORMER=EleutherAI/gpt-neo-2.7B
+          export BINOCULARS_SEQUENTIAL=true
+          echo "Large models (spill to system RAM if VRAM is tight):"
+          echo "  Observer:  $BINOCULARS_OBSERVER"
+          echo "  Performer: $BINOCULARS_PERFORMER"
+        fi
+        $PY scripts/ollama-eval.py --detect-only --output .test-output/detect-report/
+
+  improve:
+    desc: 'Detection analysis + improvement candidates. SIZE=large for bigger models.'
+    cmds:
+      - task: eval:detect
+        vars: { SIZE: '{{.SIZE | default "small"}}' }
+      - cmd: echo ""
+      - cmd: echo "Candidates written to .test-output/improvement-candidates/"
+      - cmd: echo "Review and apply them with the review-candidates task."
+
+  improve:large:
+    desc: 'Alias for `improve SIZE=large`.'
+    cmds:
+      - task: improve
+        vars: { SIZE: large }
+
+  review-candidates:
+    desc: Review and apply improvement candidates
+    cmds:
+      - |
+        PY=python3
+        [ -x .venv/bin/python3 ] && PY=.venv/bin/python3
+        $PY scripts/detect_candidates.py --review
+
+  scan:
+    desc: 'Mechanical pre-scan (whole repo). DIFF=true for changed lines only.'
+    cmds:
+      - |
+        PY=python3; [ -x .venv/bin/python3 ] && PY=.venv/bin/python3
+        FLAG=""; [ "{{.DIFF}}" = "true" ] && FLAG="--diff"
+        $PY {{.S}}/pre-scan.py --mode {{.MODE}} $FLAG {{.CLI_ARGS}}
+
+  vocab:sync:
+    desc: Regenerate derived vocabulary files from the watchlist
+    cmds:
+      - |
+        PY=python3; [ -x .venv/bin/python3 ] && PY=.venv/bin/python3
+        $PY scripts/sync_vocabulary.py
+
+  vocab:check:
+    desc: Verify derived vocabulary files match the watchlist
+    cmds:
+      - |
+        PY=python3; [ -x .venv/bin/python3 ] && PY=.venv/bin/python3
+        $PY scripts/sync_vocabulary.py --check
+
+  lint:module:
+    desc: Validate the lola module layout (AGENTS.md, SKILL.md frontmatter, anchor instructions)
+    cmd: bash scripts/lint-module.sh .
+
+  check:
+    desc: Full validation suite (lint + module lint + tests)
+    cmds:
+      - task: lint
+      - task: lint:module
+      - task: test
+      - task: test:detect
+
+  validate:
+    desc: 'Alias for `check`.'
+    cmds:
+      - task: check

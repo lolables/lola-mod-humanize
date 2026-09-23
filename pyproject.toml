@@ -1,0 +1,30 @@
+[project]
+name = "humanize"
+version = "0.1.0"
+description = "An agent skill to make LLM-generated material look more human"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "fpdf2>=2.7",
+]
+ai-detect = [
+    "torch>=2.0",
+    "transformers>=4.35",
+    "accelerate>=0.20",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["scripts"]
+
+[tool.coverage.report]
+show_missing = true
+
+[tool.coverage.html]
+directory = ".test-output/coverage"

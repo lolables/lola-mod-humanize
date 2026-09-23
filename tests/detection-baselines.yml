@@ -1,0 +1,13 @@
+{
+  "01-blog-post": 0.5873,
+  "02-readme": 0.2591,
+  "03-commit-message": 0.5034,
+  "04-pr-description": 0.4693,
+  "05-subtle-ai": 0.5813,
+  "06-promotional": 0.5172,
+  "07-mixed-content": 0.2146,
+  "01-auth-service": 0.0932,
+  "02-over-engineered": 0.085,
+  "03-go-naming": 0.0089,
+  "04-js-api-client": 0.0312
+}

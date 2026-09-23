@@ -1,0 +1,1 @@
+../../../../scripts/extract-text.py
