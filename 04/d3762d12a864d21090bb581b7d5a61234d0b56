@@ -1,0 +1,21 @@
+tests/test_sentence_lane.py
+  s_a1358a781ec6ee::t_f55d38373d9a74 166-178
+tests/fixtures/prescan/filler-excerpt.md
+  s_a1358a781ec6ee::t_1ecfffc8248a78 1-23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "04d3762d12a864d21090bb581b7d5a61234d0b56",
+  "prompts": {},
+  "sessions": {
+    "s_a1358a781ec6ee": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ad39c66a-e089-4e06-aecc-0c4296bec288",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "LLM (riotbox) <llm@riotbox>"
+    }
+  }
+}
