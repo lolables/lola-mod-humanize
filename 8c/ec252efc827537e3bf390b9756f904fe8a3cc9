@@ -1,0 +1,23 @@
+tests/test_documentation_accuracy.py
+  s_9bedd7b534e239::t_90c1e7884c7e41 1-209
+SECURITY.md
+  s_9bedd7b534e239::t_f13abd546a54ce 1-166
+reference/ai-vocabulary-watchlist.md
+  s_9bedd7b534e239::t_2bc9d27e6083d3 1-203
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "8cec252efc827537e3bf390b9756f904fe8a3cc9",
+  "prompts": {},
+  "sessions": {
+    "s_9bedd7b534e239": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "31e27d2b-1e74-422c-bf80-6c0d79ed1c2c",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Trevor Vaughan <peiriannydd@gmail.com>"
+    }
+  }
+}
