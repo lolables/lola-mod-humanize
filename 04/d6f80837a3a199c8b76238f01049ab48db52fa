@@ -1,0 +1,30 @@
+module/skills/voice-profile-generator/reference/profile-schema.md
+  s_a1358a781ec6ee::t_e94415e87d6a1a 177-180
+reference/structural-patterns.md
+  s_a1358a781ec6ee::t_e980a25f8af2b2 351-355
+module/skills/humanize/SKILL.md
+  s_a1358a781ec6ee::t_c5b75f03e10b18 451
+  s_a1358a781ec6ee::t_2ce1ff9fad89fd 474-477
+  s_a1358a781ec6ee::t_0611c18bded35d 452-455
+  s_a1358a781ec6ee::t_b409364b0b926e 517-518
+  s_a1358a781ec6ee::t_46de033309dcf1 642-647
+  s_a1358a781ec6ee::t_3b1aca1acd5094 462-464
+  s_a1358a781ec6ee::t_e6edc69b7d3f62 493-496
+  s_a1358a781ec6ee::t_7b73d8b08ed899 521
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "04d6f80837a3a199c8b76238f01049ab48db52fa",
+  "prompts": {},
+  "sessions": {
+    "s_a1358a781ec6ee": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ad39c66a-e089-4e06-aecc-0c4296bec288",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "LLM (riotbox) <llm@riotbox>"
+    }
+  }
+}
