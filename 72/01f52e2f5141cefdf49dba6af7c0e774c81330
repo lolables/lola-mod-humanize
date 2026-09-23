@@ -1,0 +1,29 @@
+reference/writing-discipline.md
+  s_a1358a781ec6ee::t_7e149dcbcac868 36
+reference/ai-vocabulary-watchlist.md
+  s_a1358a781ec6ee::t_c8ead00eb05d85 179-180
+tests/test_pre_scan.py
+  s_a1358a781ec6ee::t_80b6aaf8048838 110-118
+AGENTS.md
+  s_a1358a781ec6ee::t_7e149dcbcac868 72
+module/skills/humanize/SKILL.md
+  s_a1358a781ec6ee::t_7e149dcbcac868 599
+module/skills/humanize/scripts/vocabulary.py
+  s_a1358a781ec6ee::t_7e149dcbcac868 74-75
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "7201f52e2f5141cefdf49dba6af7c0e774c81330",
+  "prompts": {},
+  "sessions": {
+    "s_a1358a781ec6ee": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ad39c66a-e089-4e06-aecc-0c4296bec288",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "LLM (riotbox) <llm@riotbox>"
+    }
+  }
+}
