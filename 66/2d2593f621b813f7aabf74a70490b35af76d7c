@@ -1,0 +1,23 @@
+docs/METHODOLOGY.md
+  s_a1358a781ec6ee::t_73c5f8511b1dd5 176-177
+module/skills/humanize/SKILL.md
+  s_a1358a781ec6ee::t_502b6236f9ac83 588-589
+docs/EVAL-RESULTS.md
+  s_a1358a781ec6ee::t_d87838376f9d13 193-195
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "662d2593f621b813f7aabf74a70490b35af76d7c",
+  "prompts": {},
+  "sessions": {
+    "s_a1358a781ec6ee": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ad39c66a-e089-4e06-aecc-0c4296bec288",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "LLM (riotbox) <llm@riotbox>"
+    }
+  }
+}
