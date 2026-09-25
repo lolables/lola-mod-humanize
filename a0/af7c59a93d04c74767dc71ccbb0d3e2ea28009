@@ -1,0 +1,31 @@
+tests/test_manage_voices.py
+  s_a1358a781ec6ee::t_64054e40df7616 555-566
+  s_a1358a781ec6ee::t_6b4627171f299a 194-213
+  s_a1358a781ec6ee::t_8cf07ac25afd70 321-387
+  s_a1358a781ec6ee::t_103fedad6b6498 495-500
+  s_a1358a781ec6ee::t_671e7b789f9a4e 176-184,186-188
+  s_a1358a781ec6ee::t_495acfc8dbc07f 4,14
+  s_a1358a781ec6ee::t_7bef6849d222ec 410-416
+  s_a1358a781ec6ee::t_be847a8b8c8d17 584-595
+  s_a1358a781ec6ee::t_1fb467f9995298 15
+module/skills/humanize/scripts/manage-voices.py
+  s_a1358a781ec6ee::t_7ebafa91de5c84 241-247,249
+  s_a1358a781ec6ee::t_f74cedc7a22a93 68-97,99-103,108-112
+  s_a1358a781ec6ee::t_88013ca1c1b8b6 20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "a0af7c59a93d04c74767dc71ccbb0d3e2ea28009",
+  "prompts": {},
+  "sessions": {
+    "s_a1358a781ec6ee": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ad39c66a-e089-4e06-aecc-0c4296bec288",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "LLM (riotbox) <llm@riotbox>"
+    }
+  }
+}
