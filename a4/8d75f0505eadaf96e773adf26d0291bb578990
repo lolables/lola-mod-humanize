@@ -1,0 +1,28 @@
+README.md
+  s_a1358a781ec6ee::t_3a0f3334609d4d 208,211-229
+module/skills/humanize/reference/voices/local.example.md
+  s_a1358a781ec6ee::t_1c734e2d247591 9-13,17
+docs/METHODOLOGY.md
+  s_a1358a781ec6ee::t_495b49cee5bd60 147-149
+module/skills/humanize/SKILL.md
+  s_a1358a781ec6ee::t_58af611cf5b332 378-383
+reference/voices/local.example.md
+  s_a1358a781ec6ee::t_ede0768cf1001d 5-6,8,12
+  s_a1358a781ec6ee::t_b44439e6ed9ad0 9-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "a48d75f0505eadaf96e773adf26d0291bb578990",
+  "prompts": {},
+  "sessions": {
+    "s_a1358a781ec6ee": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ad39c66a-e089-4e06-aecc-0c4296bec288",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "LLM (riotbox) <llm@riotbox>"
+    }
+  }
+}
