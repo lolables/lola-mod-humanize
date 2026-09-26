@@ -1,0 +1,27 @@
+tests/test_sentence_lane.py
+  s_a1358a781ec6ee::t_ea19cdba20d77d 664
+  s_a1358a781ec6ee::t_a0a9fd5a18dc32 513-531,562-567
+  s_a1358a781ec6ee::t_6ba6e9f19d1577 628-631,635,637,640,645,652-660,665,667-670,682-683,686-688,692
+  s_a1358a781ec6ee::t_9eef5cfa31d988 694-696
+  s_a1358a781ec6ee::t_b7493dea67937b 568,661-662
+module/skills/humanize/scripts/pre-scan.py
+  s_a1358a781ec6ee::t_c3127dc5b2b858 847-856
+  s_a1358a781ec6ee::t_41ef0226d5afca 410-412,697-700,704,707-712,734-738,784,799,867,869,875-877
+  s_a1358a781ec6ee::t_160552c4fc0700 701-702
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "d68ddf7405aeb994396bc1d68f25cc505ee2fb67",
+  "prompts": {},
+  "sessions": {
+    "s_a1358a781ec6ee": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ad39c66a-e089-4e06-aecc-0c4296bec288",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "LLM (riotbox) <llm@riotbox>"
+    }
+  }
+}
