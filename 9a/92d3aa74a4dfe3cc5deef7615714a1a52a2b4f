@@ -1,0 +1,25 @@
+reference/ai-vocabulary-watchlist.md
+  s_a1358a781ec6ee::t_16964ff628f955 179
+tests/test_vocabulary_regression.py
+  s_a1358a781ec6ee::t_16964ff628f955 62-63
+module/skills/humanize/scripts/vocabulary.py
+  s_a1358a781ec6ee::t_16964ff628f955 75-76
+tests/test_pre_scan.py
+  s_a1358a781ec6ee::t_3069571177950d 115-124
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "9a92d3aa74a4dfe3cc5deef7615714a1a52a2b4f",
+  "prompts": {},
+  "sessions": {
+    "s_a1358a781ec6ee": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ad39c66a-e089-4e06-aecc-0c4296bec288",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "LLM (riotbox) <llm@riotbox>"
+    }
+  }
+}
