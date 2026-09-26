@@ -1,0 +1,27 @@
+tests/test_readability.py
+  s_a1358a781ec6ee::t_b3244988232919 422
+  s_a1358a781ec6ee::t_019e2fbb3146be 389-421,423-443
+  s_a1358a781ec6ee::t_8fa2b98876046b 444-447
+module/skills/humanize/scripts/pre-scan.py
+  s_a1358a781ec6ee::t_31993a983aa16d 212
+  s_a1358a781ec6ee::t_748efe1fced753 189-211,213
+  s_a1358a781ec6ee::t_99340c34f809af 411,417-419
+  s_a1358a781ec6ee::t_793f40771b3b18 375-379
+  s_a1358a781ec6ee::t_fc280dc31ff211 420
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "3361f75bff9111f6b3d31fc515251973dc56afb2",
+  "prompts": {},
+  "sessions": {
+    "s_a1358a781ec6ee": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ad39c66a-e089-4e06-aecc-0c4296bec288",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "LLM (riotbox) <llm@riotbox>"
+    }
+  }
+}
