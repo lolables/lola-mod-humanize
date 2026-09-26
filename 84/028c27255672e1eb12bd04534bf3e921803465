@@ -1,0 +1,24 @@
+tests/test_manage_voices.py
+  s_a1358a781ec6ee::t_cf2954303db663 588-594,597
+  s_a1358a781ec6ee::t_8bf7736f7bb051 562-587,595-596,598-610
+  s_a1358a781ec6ee::t_a557615c2b7ecc 611-612
+module/skills/humanize/scripts/manage-voices.py
+  s_a1358a781ec6ee::t_ed988f8df1a821 14-16
+  s_a1358a781ec6ee::t_ba0c8042e2a6af 71-72,74-75,83,95-96,110,136-137,141-142,148,216,218,234,255,263,279,283,293,318,336-337,407-413,417,420,425,429,435,443-449
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "84028c27255672e1eb12bd04534bf3e921803465",
+  "prompts": {},
+  "sessions": {
+    "s_a1358a781ec6ee": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ad39c66a-e089-4e06-aecc-0c4296bec288",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "LLM (riotbox) <llm@riotbox>"
+    }
+  }
+}
