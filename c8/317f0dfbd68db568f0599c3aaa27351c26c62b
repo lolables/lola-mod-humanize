@@ -1,0 +1,22 @@
+module/skills/humanize/scripts/pre-scan.py
+  s_a1358a781ec6ee::t_4b36000358f6ce 151,689-691,694-695,698-699,710-713,717-730,768-770,782,786,794-798,806-807,922,987
+  s_a1358a781ec6ee::t_a95cc61099c903 143-144
+tests/test_readability.py
+  s_a1358a781ec6ee::t_0d2e7b11c7cc01 448-509
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "c8317f0dfbd68db568f0599c3aaa27351c26c62b",
+  "prompts": {},
+  "sessions": {
+    "s_a1358a781ec6ee": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ad39c66a-e089-4e06-aecc-0c4296bec288",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "LLM (riotbox) <llm@riotbox>"
+    }
+  }
+}
