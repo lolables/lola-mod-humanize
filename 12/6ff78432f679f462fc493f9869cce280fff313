@@ -1,0 +1,23 @@
+docs/ACCEPTANCE-RESULTS.md
+  s_a1358a781ec6ee::t_bdc2a37cbc72a9 1-19,21,27-109
+  s_a1358a781ec6ee::t_a3fe86b6e5957b 20,22-26
+  s_a1358a781ec6ee::t_dd1d93ba467fa6 110-113
+README.md
+  s_a1358a781ec6ee::t_448a5831f241d1 156
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "126ff78432f679f462fc493f9869cce280fff313",
+  "prompts": {},
+  "sessions": {
+    "s_a1358a781ec6ee": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ad39c66a-e089-4e06-aecc-0c4296bec288",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "LLM (riotbox) <llm@riotbox>"
+    }
+  }
+}
