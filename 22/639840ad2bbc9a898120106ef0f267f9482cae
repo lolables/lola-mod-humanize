@@ -1,0 +1,24 @@
+reference/methodology.md
+  s_a1358a781ec6ee::t_d35be782040a86 194,196-197,239-241
+  s_a1358a781ec6ee::t_3d19150114b6ec 195
+reference/structural-patterns.md
+  s_a1358a781ec6ee::t_642e1c53db6174 376-379,385-388,396
+module/skills/humanize/SKILL.md
+  s_a1358a781ec6ee::t_d35be782040a86 511-516,596-598
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "22639840ad2bbc9a898120106ef0f267f9482cae",
+  "prompts": {},
+  "sessions": {
+    "s_a1358a781ec6ee": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ad39c66a-e089-4e06-aecc-0c4296bec288",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "LLM (riotbox) <llm@riotbox>"
+    }
+  }
+}
