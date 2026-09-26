@@ -1,0 +1,34 @@
+module/skills/humanize/scripts/pre-scan.py
+  s_a1358a781ec6ee::t_10eb7802a7544e 482-484
+  s_a1358a781ec6ee::t_1cfd8d3e4183dd 556-561
+  s_a1358a781ec6ee::t_da17796ca332b9 802
+  s_a1358a781ec6ee::t_33e822a0695363 686
+  s_a1358a781ec6ee::t_9c9486a57ce063 663,668-671,687-689,755,762
+  s_a1358a781ec6ee::t_44d413c563c3a1 754,758,763-766
+  s_a1358a781ec6ee::t_3aa4b1fa05b5e1 642-662,664-667,672-685,690-735
+  s_a1358a781ec6ee::t_1857bd16126ead 601,603-611
+  s_a1358a781ec6ee::t_7b836e108021fe 451,866
+tests/test_sentence_lane.py
+  s_a1358a781ec6ee::t_0d146a70620449 22-27
+  s_a1358a781ec6ee::t_46be6ad2363ff4 19,30,34,91
+  s_a1358a781ec6ee::t_9d0213fab94c3d 332-333,339-340,431,434-442
+  s_a1358a781ec6ee::t_fcf3ea6ba51c25 341-430,432-433,443-446
+tests/test_readability.py
+  s_a1358a781ec6ee::t_06bec3db42ab6f 398
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "cc5460483f1aa70f6194fbeacba5712c02dfc5c5",
+  "prompts": {},
+  "sessions": {
+    "s_a1358a781ec6ee": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ad39c66a-e089-4e06-aecc-0c4296bec288",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "LLM (riotbox) <llm@riotbox>"
+    }
+  }
+}
