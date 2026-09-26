@@ -1,0 +1,24 @@
+docs/ACCEPTANCE-RESULTS.md
+  s_a1358a781ec6ee::t_91ec7df4379fc8 113-114,116-117
+module/skills/humanize/SKILL.md
+  s_a1358a781ec6ee::t_91ec7df4379fc8 186-187,190-191,532,539,551,636
+reference/methodology.md
+  s_a1358a781ec6ee::t_a22f570783cae2 54-59
+  s_a1358a781ec6ee::t_91ec7df4379fc8 202,209-210,216,268
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "91389ba5c2f0f0374892327e410c4f0350965a75",
+  "prompts": {},
+  "sessions": {
+    "s_a1358a781ec6ee": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ad39c66a-e089-4e06-aecc-0c4296bec288",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "LLM (riotbox) <llm@riotbox>"
+    }
+  }
+}
