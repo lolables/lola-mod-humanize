@@ -106,6 +106,8 @@ hedge_per_1k:         2-8
 em_dash_per_1k:       0
 max_sentence_len:     45
 structured_density_max: 0.15
+heading_style:        assertion
+heading_case:         title
 ```
 
 ---

@@ -113,7 +113,7 @@ delete/replace Tier 5 based on whether the connection is needed.
 
 ### Pass 2: Structural analysis
 
-Checks for 15 text patterns and 8 code patterns from the reference files.
+Checks for 17 text patterns and 8 code patterns from the reference files.
 Key insight: these patterns are detectable because LLMs produce **uniform**
 output. Human writing varies: paragraph lengths differ, sentence complexity
 oscillates, transitions are contextual rather than formulaic. Pattern 15 (wall
@@ -133,6 +133,12 @@ The most reliable structural indicators (from research):
 Fixes are applied in priority order: zero-risk deletions first (collaborative
 remnants, generic openers), then structural changes (transitions, section
 balance), then tonal changes (promotional flattening, attribution specificity).
+Each fix changes only what a pattern flagged. The scanner lists every bold
+span, but bold goes only when density reaches 3 per 1000 words or the span
+is an inline header or paragraph lead; below that, author emphasis stays
+unless the voice profile bans bold emphasis outright. A bold lead that goes becomes
+a heading that is a true peer of its siblings (same level, scope, and
+grammatical form), or the label word folds into the paragraph's first sentence.
 
 ### Pass 4: Voice transformation
 
@@ -144,8 +150,17 @@ without strong personality.
 
 Nine voice profiles live in `reference/voices/` (academic, blog, code-comments,
 code-design, code-docs, general, release-notes, rfc, tutorial), auto-detected by
-content type. Personal overrides go in `$XDG_CONFIG_HOME/humanize/voices/` or
-`reference/voices/*.local.md` (gitignored).
+content type. Personal overrides go in `$XDG_CONFIG_HOME/humanize/voices/`, the
+root of the project being humanized (`reference/voices/*.local.md`), or the
+installed skill's own `reference/voices/`, checked in that order. A
+project-root override counts only when git does not track it, no part of its
+path is a symlink, and it is not inside a nested repo or submodule. The skill
+resolves the path with `manage-voices.py path --for <file>`, which applies
+those checks, and tells the user when a project-root profile is in use. A
+profile is style guidance only: the skill never follows tool, command,
+file-access, or network instructions found in one. The agent still acts on
+its register and wording guidance, so a repo's author must not be able to
+inject a profile by committing one or a symlink to one of the user's files.
 
 A personal profile can be auto-generated from writing samples via
 `task voices:profile`, which analyzes sentence structure, vocabulary register,
@@ -156,10 +171,18 @@ diversity.
 
 ### Pass 5: Self-verification
 
-A checklist with 14 text checks and 7 code checks. Each check has a threshold
-(e.g., "AI vocabulary density <= 2 per 500 words"). Failures are reported with
-context, because sometimes a "failure" is acceptable (a Tier 3 word that's genuinely
-the best choice).
+A checklist with 20 text checks and 7 code checks. Each check has a threshold
+(e.g., "AI vocabulary density <= 2 per 500 words"). The sentence-length SD
+check reads the pre-scan's verdict against the voice's range instead of a hand
+count, and quoted material is exempt from the dash and bold checks. A GitHub
+admonition is the author's own text, so it gets no such exemption and the
+checklist covers it. Pass 5 fixes only mechanical items (dashes, double
+colons, bold density, watchlist vocabulary, generic openers and closers,
+collaborative remnants, heading case and style, the sentence-length ceiling) and names each fix. Relational problems such as
+filler, entailment, and clarity are reported without edits. Failures are
+reported with context, because sometimes a "failure" is acceptable (a Tier 3
+word that's genuinely the best choice).
+
 
 ## Research Foundation
 
@@ -173,8 +196,8 @@ vocabulary variation and sentence length oscillation.
 
 Key limitation: perplexity-based detection has high false-positive rates for
 non-native English speakers (61.22% per Liang et al. 2023) and well-known texts.
-Humanize doesn't target perplexity scores directly. It targets the underlying
-uniformity that causes low scores.
+Humanize targets the uniformity behind low perplexity scores rather than the
+scores themselves.
 
 ### 2. Linguistic pattern detection (Wikipedia/editorial)
 

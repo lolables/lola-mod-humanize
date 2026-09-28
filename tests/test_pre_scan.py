@@ -107,6 +107,25 @@ class TestBannedPhrases:
         bp = [f for f in hits if f['tag'] == 'banned-phrase']
         assert bp[0]['severity'] == 'HIGH'
 
+    def test_worth_noting_contraction(self):
+        for s in ("It's worth noting that the cache is cold.\n",
+                  "It’s worth noting that the cache is cold.\n"):
+            assert 'banned-phrase' in _tags(scan_text(s, "t.md"))
+
+    def test_worth_noting_sentence_initial(self):
+        for s in ("Worth noting: the lockfile pins every transitive dependency.\n",
+                  "The build passed. Worth noting that the cache was cold.\n"):
+            assert 'banned-phrase' in _tags(scan_text(s, "t.md")), s
+
+    def test_worth_noting_negated_or_predicative_not_flagged(self):
+        for s in ("A one-second stall is not worth noting.\n",
+                  "The retry count is worth noting in the runbook.\n"):
+            assert 'banned-phrase' not in _tags(scan_text(s, "t.md")), s
+
+    def test_want_to_be_clear(self):
+        hits = scan_text("I want to be clear that we ship Friday.\n", "t.md")
+        assert 'banned-phrase' in _tags(hits)
+
 
 # -- Check 5: Formulaic transitions --
 
@@ -168,6 +187,33 @@ class TestEmDash:
         hits = scan_text("Word\u2014word.\n", "t.md")
         em = [f for f in hits if f['tag'] == 'em-dash']
         assert em[0]['severity'] == 'HIGH'
+
+
+class TestTableCellDash:
+    """A lone dash in a table cell is an empty-value marker, not a connector."""
+
+    def test_lone_em_dash_cell_skipped(self):
+        text = "| Runner | Cache hit |\n|---|---|\n| arm64 | \u2014 |\n"
+        assert 'em-dash' not in _tags(scan_text(text, "t.md"))
+
+    def test_lone_en_dash_cell_skipped(self):
+        text = "| Runner | Cache hit |\n|---|---|\n|\u2013| 91% |\n"
+        assert 'en-dash' not in _tags(scan_text(text, "t.md"))
+
+    def test_dash_in_cell_prose_flagged(self):
+        text = "| Runner | Note |\n|---|---|\n| arm64 | slow\u2014cold cache |\n"
+        em = [f for f in scan_text(text, "t.md") if f['tag'] == 'em-dash']
+        assert [f['line'] for f in em] == [3]
+
+    def test_lone_cell_does_not_hide_prose_dash_on_same_row(self):
+        text = "| arm64 | \u2014 | slow \u2013 cold cache |\n"
+        tags = _tags(scan_text(text, "t.md"))
+        assert 'em-dash' not in tags
+        assert tags.count('en-dash') == 1
+
+    def test_lone_dash_outside_table_flagged(self):
+        em = [f for f in scan_text("Cache hit:\n\u2014\n", "t.md") if f['tag'] == 'em-dash']
+        assert [f['line'] for f in em] == [2]
 
 
 # -- Check 7: En dash --
@@ -256,6 +302,18 @@ class TestBoldface:
 
     def test_no_bold_in_plain_text(self):
         hits = scan_text("Normal sentence without markup.\n", "t.md")
+        assert 'bold' not in _tags(hits)
+
+    def test_nested_italic_inside_bold(self):
+        # A single * inside bold used to end the match, so the regex paired
+        # the gap between two bold spans instead of the spans themselves.
+        text = "**Which jobs *really* failed?** Ask the **queue** owner.\n"
+        bold = [f['text'] for f in scan_text(text, "t.md") if f['tag'] == 'bold']
+        assert bold == ["**Which jobs *really* failed?**", "**queue**"]
+
+    def test_nested_italic_inline_header(self):
+        hits = scan_text("- **The *real* cost:** latency.\n", "t.md")
+        assert 'inline-header' in _tags(hits)
         assert 'bold' not in _tags(hits)
 
     def test_bold_severity(self):

@@ -58,6 +58,9 @@ CLOSERS = {
 }
 # Tier 5 rows documented but never scanned before the migration.
 NEWLY_SCANNED = {'it is worth noting', 'one might argue', 'this raises the question'}
+# Added after the migration: lead-ins that announce a claim instead of making it.
+LEAD_IN_PHRASES = {"it's worth noting", 'it’s worth noting', 'i want to be clear that',
+                   'worth noting:', 'worth noting that'}
 
 
 def test_tier_word_sets_unchanged():
@@ -71,11 +74,12 @@ def test_transition_starters_unchanged():
 
 
 def test_banned_phrases_are_superset_of_today():
-    """Migration may only add NEWLY_SCANNED; nothing may disappear."""
+    """Only NEWLY_SCANNED and LEAD_IN_PHRASES may be added; nothing may disappear."""
     actual = set(v.BANNED_PHRASES)
+    allowed = NEWLY_SCANNED | LEAD_IN_PHRASES
     assert BANNED_PHRASES <= actual, f'lost: {BANNED_PHRASES - actual}'
-    assert actual - BANNED_PHRASES <= NEWLY_SCANNED, (
-        f'unexpected additions: {actual - BANNED_PHRASES - NEWLY_SCANNED}'
+    assert actual - BANNED_PHRASES <= allowed, (
+        f'unexpected additions: {actual - BANNED_PHRASES - allowed}'
     )
 
 

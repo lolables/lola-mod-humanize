@@ -127,6 +127,8 @@ hedge_per_1k:         1-5
 em_dash_per_1k:       0
 max_sentence_len:     40
 structured_density_max: 0.55
+heading_style:        noun-phrase
+heading_case:         title
 ```
 
 ---

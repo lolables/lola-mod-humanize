@@ -176,7 +176,8 @@ Not AI-exclusive, but overused by LLMs in specific positions.
 | In conclusion | yes | closer |  | Almost always -- delete or rewrite naturally |
 | To summarize |  | closer |  | Almost always -- trust the reader |
 | As we have seen |  | closer |  | Delete -- forward reference is fine, backward is padding |
-| It is worth noting | yes |  |  | Delete -- just note it |
+| It is worth noting | yes |  | it is worth noting, it's worth noting, it’s worth noting, worth noting:, worth noting that | Delete -- just note it |
+| I want to be clear that | yes |  |  | Delete the lead-in; the rest of the sentence is the claim |
 | One might argue | yes |  |  | Name who argues this, or delete |
 | This raises the question | yes |  |  | Ask the question directly |
 | In this [article/section] |  | closer | in this article, in this section | Delete -- the reader knows where they are |

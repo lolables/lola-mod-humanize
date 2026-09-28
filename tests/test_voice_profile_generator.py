@@ -171,6 +171,19 @@ class TestSkillFile:
         assert 'analyze-voice' in content or 'analyze_voice' in content, \
             'Skill must reference analyze-voice.py'
 
+    def test_skill_draft_command_replaces_scratch_draft(self):
+        """analyze-voice.py refuses to overwrite; a re-run must still refresh its scratch draft."""
+        content = (SKILL_DIR / 'SKILL.md').read_text()
+        cmd = re.search(r'analyze-voice\.py".*?```', content, re.DOTALL)
+        assert cmd and '--force' in cmd.group(0), \
+            'Phase 1 draft command must pass --force for its .test-output scratch file'
+
+    def test_skill_asks_before_replacing_profile(self):
+        content = (SKILL_DIR / 'SKILL.md').read_text()
+        out = content[content.index('**Output location:**'):content.index('## Phase 5')]
+        assert re.search(r'already exists.*ask the user', out, re.IGNORECASE | re.DOTALL), \
+            'Skill must tell the agent to ask before replacing an existing profile'
+
     def test_skill_defines_interactive_decisions(self):
         skill = SKILL_DIR / 'SKILL.md'
         content = skill.read_text()

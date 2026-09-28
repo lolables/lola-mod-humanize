@@ -190,9 +190,9 @@ system prompt fail to override for local models.
 ## Running the evaluation
 
 Two prerequisites. An Ollama server has to be running and reachable. Every model
-you intend to evaluate has to be pulled first (`ollama pull qwen3:8b`), because
-the script only queries the server. It never pulls for you, so a missing model
-surfaces as a generation error.
+you intend to evaluate has to be pulled first (`ollama pull qwen3:8b`). The
+script only queries the server, so a missing model surfaces as a generation
+error.
 
 `OLLAMA_HOST` defaults to `localhost` (`Taskfile.yml:230`), which is what you
 want when Ollama runs on the same machine. The `host.containers.internal` value

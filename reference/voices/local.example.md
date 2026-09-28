@@ -2,11 +2,17 @@
 #
 # Place this file in one of these locations:
 #   1. $XDG_CONFIG_HOME/humanize/voices/<profile>.local.md  (~/.config/humanize/voices/)
-#   2. <skill-dir>/reference/voices/<profile>.local.md      (skill-local, gitignored)
+#   2. <project-root>/reference/voices/<profile>.local.md   (untracked, not a symlink)
+#   3. <skill-dir>/reference/voices/<profile>.local.md      (skill-local, gitignored)
 #
-# The first location that exists wins. <skill-dir> is where your assistant
-# installed the humanize skill, which is not the same as this repository
-# checkout. Run `task voices -- path <profile>` to see which file is active.
+# The first location that exists wins. <project-root> is the git top level
+# of the project you're humanizing (for work in this checkout, that's this
+# repository's own root). A project-root file is skipped if git tracks it or
+# any part of its path is a symlink: the agent follows this file as
+# instructions, so a repo's author must not be able to plant one. Never
+# commit it. <skill-dir> is where your assistant installed the
+# humanize skill, which is not the same as this repository checkout.
+# Run `task voices -- path <profile>` to see which file is active.
 #
 # This overrides the built-in profile for that content type only.
 # Other profiles are unaffected.
@@ -98,3 +104,5 @@
 # second_person_per_1k: 
 # contraction_per_1k: 
 # em_dash_per_1k: 0
+# heading_style: noun-phrase    (or: assertion)
+# heading_case: title           (or: sentence)

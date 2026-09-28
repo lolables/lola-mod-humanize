@@ -93,6 +93,8 @@ second_person_per_1k: 0-8
 em_dash_per_1k:       0
 max_sentence_len:     20
 structured_density_max: 0.95
+heading_style:        noun-phrase
+heading_case:         title
 ```
 
 ---
