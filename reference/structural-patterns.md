@@ -89,6 +89,34 @@ appear balanced and insightful.
 **How to fix:** Make direct statements. "It improves both performance and
 developer experience." Or separate into distinct points if they merit it.
 
+**Structural form (mirrored antithesis):** two adjacent sentences in near
+parallel with a reversal at the pivot. No fixed phrase marks it, so a
+watchlist cannot catch it:
+
+> The build cache can store compiled objects. It cannot store the flags they
+> were built with.
+
+Same subject, same verb, "can" against "cannot", halves of nearly equal
+length. Nothing in the content asked for that symmetry. The shape clusters:
+once a draft uses it, check the title, the opening line, and every section
+closer. The pre-scan tags candidates as `mirrored-antithesis`.
+
+**How to fix the structural form:** keep the contrast and break the symmetry.
+Make one side concrete, so a short sentence faces a long one or an
+abstraction faces a list: "The build cache stores compiled objects. Its key
+has no field for compiler flags, target triple, or build environment."
+
+Keep a "not Y" clause when Y names something the reader would otherwise
+assume is included (a scope limit), or when it answers a real objection and
+its halves differ clearly in length. "This raises the
+CI timeout for integration jobs, not for unit jobs" stays, because a reader
+would assume unit jobs were included. "The trouble isn't that the job skipped the lockfile check;
+the pipeline never runs one" stays too.
+
+A rewrite must not end on a new "X, not Y" tail. "The cache stores objects,
+not the flags behind them" is the same mirror folded into one sentence.
+State the missing half on its own terms, as in the example above.
+
 ---
 
 ## 6. Challenges-and-Future-Prospects Endings
@@ -127,7 +155,8 @@ other two forms inherit the habit through downstream conversion.
 commas for mild pauses, parentheses for asides, colons for introductions,
 periods for new thoughts. A double hyphen is still correct as a CLI flag prefix
 (`--verbose`), as a SQL comment, or inside a quoted terminal session. This
-pattern is about prose.
+pattern is about prose. A dash standing alone in a table cell marks an empty
+value and is exempt; `pre-scan.py` skips it.
 
 ---
 
@@ -145,6 +174,12 @@ interfaces (rendered Markdown).
 Use actual sub-headings if the items are substantial enough. For genuine
 lists (feature matrices, option comparisons), tables are often better.
 
+A removed bold lead keeps its navigation value: it becomes a heading when
+#17's promotion criteria apply; otherwise the label word folds into the
+paragraph's first sentence. Prose made from numbered or labelled items
+keeps the enumeration visible (the numbers, or a real list), or introduces
+each term before anything refers to it as "the" term.
+
 ---
 
 ## 9. Excessive Boldface
@@ -155,9 +190,17 @@ is bolded, often in a "key takeaways" pattern.
 **Why LLMs do it:** Trained on readmes, slide decks, and listicles that use
 bold as a scanning aid.
 
-**How to fix:** Remove all decorative bold. Bold should be reserved for
-genuinely critical warnings or first-definition of terms (and even then,
-sparingly).
+**When it fires:** only when bold density reaches 3 per 1000 words, or when
+a bold span is an inline header or bold paragraph lead (#8). The pre-scan
+reports every bold span as a `bold` finding. That is a list of locations to
+check, and it carries no verdict.
+
+**How to fix:** below the threshold, author emphasis stays, unless the
+active voice profile bans bold emphasis outright (Pass 4 applies that ban
+as a flag; "bold only for warnings" restates this pattern and is no ban). Over the threshold, remove the least
+necessary bold first, and keep warnings and first definitions. In a table,
+a contrast is bold marking the same kind of value across a column or row;
+remove its emphasis from every cell or from none.
 
 ---
 
@@ -264,6 +307,129 @@ argument.
 
 ---
 
+## 16. Redundant Signposting and Filler
+
+**What it looks like:** a sentence whose content the material right before
+or after it already carries. Its position only changes the name:
+
+| Form | Example |
+|---|---|
+| Count-then-enumerate | "Four steps get you there:" above a four-step list |
+| Heading echo | "This section covers caching." under `### Caching` |
+| Promissory lead | "Retries are one piece of the story." before the two sentences that give the rest |
+| Summary of the artifact above | "Five endpoints, zero coverage." under a five-row table whose coverage column already reads 0% |
+| Closing flourish | A section ending on a punchy restatement of a claim made properly elsewhere |
+
+It also covers a claim an earlier one already entails: "No replica received
+the write" after "The primary rejected the write before replication."
+
+**Why LLMs do it:** each sentence is fluent and true on its own, so nothing
+flags it. The model announces, delivers, then summarizes. Restructuring
+leaves scaffolding too: when Pass 3 turns bold lead-ins into headings, the
+sentence that introduced them now introduces nothing.
+
+**How to fix:** delete the sentence and read its neighbours. If nothing is
+lost, it was filler, wherever it sat. Leave the slot empty; a new sentence in
+the same slot is usually filler again, and the same claim in new words is
+not a fix. After the cut, repair any "also", "so", "this", or similar word
+that pointed at the deleted sentence.
+
+Keep a sentence that carries a reason, navigation the reader cannot infer, a
+scope limit, a real hedge (uncertainty nothing later resolves), a pre-empted
+objection, or a topic sentence that absorbed a removed bold lead. "Either
+lock strategy would work for me" stays when the reader needs it to weigh the
+proposal. Keep a "not Y" clause when Y names something the reader would otherwise
+assume is included (a scope limit), or when it answers a real objection and
+its halves differ clearly in length.
+
+A colon lead is the same shape at clause scale. "The slowdown spreads: each
+query hits it, and the delay grows with table size" gestures at two claims
+before stating them. Keep colon leads that label a list item,
+introduce a quote, or gloss an abstraction with something concrete.
+
+**Where to look.** Filler collects at seams. Check these positions every
+time, whether or not anything there looks wrong:
+
+- the first sentence after every heading, bold lead, or `<summary>`
+- the last sentence before every heading or `</details>`
+- the sentences directly before and after every table, list, code block, and
+  blockquote
+
+**Same shape elsewhere.** After any hit, search the whole document for
+siblings: the same form with a different count word or different phrasing.
+A hit on "Four steps get you there:" means checking for "Two caveats apply:"
+and "A few options exist:" too.
+
+**Entailment.** For each paragraph, ask whether an earlier claim already
+forces this one to be true. If it does, cut it.
+
+**Attribution.** A lead that carries attribution ("from that discussion", "in
+the benchmark run") keeps the attribution when you cut the lead. "In the
+load test, one number stood out: p99 latency doubled" becomes "In the load
+test, p99 latency doubled."
+
+**Closing flourish.** Delete it. A rewrite that still pivots on "X, not Y",
+"all of it, not some", or a trailing intensifier ("every single time") has
+not resolved it.
+
+**Example before:**
+> The cache design has a gap. It is keyed on source hash and compiler path,
+> and it ignores flags. So flags never reach the key.
+
+**Example after:**
+> The cache is keyed on source hash and compiler path, and it ignores flags.
+
+---
+
+## 17. Heading Style
+
+**What it looks like:** headings that fight the outline. A bold lead-in
+converted mechanically keeps its inert label (`**The shape.**` becomes
+`### The shape`). Headings rewritten as sentences ("Four failure modes the
+retry logic misses") turn a table of contents into a list of claims.
+
+**Why LLMs do it:** "make the headings informational" reads equally well as
+"state the thesis" and "label the content", and the text alone does not say
+which one the document needs.
+
+**How to fix:** follow the voice profile's Target Metrics.
+
+- `heading_style: noun-phrase`: a terse label that reads as a table-of-contents
+  entry ("Cache Design", "Rollout Plan"). The narrative stays in the prose.
+  A heading with a finite verb is a clause and fails this style, noun clauses
+  included: rewrite "How the Scheduler Picks a Runner" as "Runner Selection"
+  and "Why the Lock Times Out" as "Lock Timeouts". Re-casing a clause does
+  not fix it.
+- `heading_style: assertion`: the heading carries the section's claim ("The
+  cache ignores compiler flags").
+- `heading_case: sentence`: capitalize the first word and proper nouns only.
+- `heading_case: title`: capitalize every word except articles, coordinating
+  conjunctions, and prepositions of four letters or fewer. The first and last
+  words are always capitalized: "Rolling Back a Failed Deploy", "Retries in
+  the Upload Step". Code spans keep their case: ``Tuning the `max_conns`
+  Setting``.
+- Under either case, a name with deliberate lowercase keeps it, even as the
+  first word: "etcd Snapshot Schedule", "pnpm workspace layout".
+- The document's H1 title follows the same style and case.
+
+These rules apply whatever the profile sets:
+
+| Check | Rule |
+|---|---|
+| Prefixes | Strip prefixes that carry nothing ("Takeaway 2:", "Part B:"). An ordinal prefix must not survive as prose ("The second takeaway:"); fold its content into a real heading or a sentence. |
+| `<summary>` lines | Not a heading; `heading_style` and `heading_case` never apply. It is the only visible description of the collapsed content, so it stays a descriptive abstract in the author's case. Remove only a count, a gloss joined by a dash, or an empty ordinal prefix: "Query plans for the six slowest reports" becomes "Query plans for the slowest reports", never "Query Plans". |
+| Inert bold labels | Promote the label to a noun-phrase heading at the right level when its section runs past about three paragraphs or holds parallel items. A promoted heading must pass this pattern itself and be a true peer of the headings beside it: same heading level, same scope, and same grammatical form. Otherwise the label word folds into the paragraph's first sentence. |
+| Duplicates | Flag two headings with the same text in one document. |
+| Issue-number headings | Flag a heading that is only a list of issue numbers ("#412, #415"); name what the issues share. |
+| Renames | Check cross-references and anchor links before renaming. |
+| Fixed headings | Never rename a heading the user dictated or one a template the document follows requires (a GitHub issue template's section headings, for example). |
+
+Check `heading_style` and `heading_case` independently; each applies only
+when the profile sets it. Without `heading_style`, apply only the table above.
+Without `heading_case`, leave capitalization alone.
+
+---
+
 ## Sources
 
 - Wikipedia:Signs of AI writing -- sections on Content, Language, Style
@@ -271,3 +437,5 @@ argument.
 - Beutler Ink, "How to Spot AI Writing, According to Wikipedia" (2025)
 - The Augmented Educator, "Ten Telltale Signs" (2025)
 - Louis Bouchard, "How to Clean Up AI-Generated Drafts" (2025)
+- Humanize maintainers, eight manual review rounds on a 9,600-word issue
+  draft (2026) -- #5 structural form, #16, #17

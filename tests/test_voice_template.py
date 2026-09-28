@@ -88,6 +88,14 @@ def test_courtesy_symlink_resolves():
     assert link.resolve() == (REPO / "reference" / "courtesy.md").resolve()
 
 
+def test_clarity_symlink_resolves_and_skill_loads_it():
+    link = REPO / "module" / "skills" / "humanize" / "reference" / "clarity.md"
+    assert link.is_symlink()
+    assert link.resolve() == (REPO / "reference" / "clarity.md").resolve()
+    skill = (REPO / "module" / "skills" / "humanize" / "SKILL.md").read_text()
+    assert "`reference/clarity.md`" in skill
+
+
 EXAMPLE_TEMPLATES = [
     VOICES_DIR / "local.example.md",
     REPO / "module" / "skills" / "humanize" / "reference" / "voices" / "local.example.md",

@@ -20,14 +20,14 @@ passes are:
 
 1. **Vocabulary scan** -- flags ~95 known AI-characteristic words and phrases,
    organized by detection strength
-2. **Structural analysis** -- detects 15 text patterns and 8 code patterns that
+2. **Structural analysis** -- detects 17 text patterns and 8 code patterns that
    signal AI generation (uniform sentence length, formulaic transitions,
    symmetric structure, etc.)
 3. **Structural transformation** -- fixes detected patterns (lists to prose,
    symmetry to variation, deletions of formulaic elements)
 4. **Voice transformation** -- applies a content-type-specific voice profile
    (sentence length variation, active voice, specificity, parenthetical asides)
-5. **Self-verification** -- checks the output against a 14-point text checklist
+5. **Self-verification** -- checks the output against a 20-point text checklist
    and 7-point code checklist
 
 ## Usage
@@ -128,9 +128,10 @@ module/                                     lola module (installable surface)
     voice-profile-generator/SKILL.md        Voice profile generator skill
 reference/
   ai-vocabulary-watchlist.md     ~95 flagged words/phrases by tier, single source of truth for the vocabulary
-  structural-patterns.md         15 text anti-patterns with fixes
+  structural-patterns.md         17 text anti-patterns with fixes
   code-patterns.md               8 code detection signatures with fixes
   courtesy.md                    Abrasive-to-courteous rewrites (politeness wash)
+  clarity.md                     Copy-edit defect classes for the Tighten step
   writing-discipline.md          Copy-pasteable rules for generation-time prevention
   voices/                        9 voice profiles by content type
   methodology.md                 Full six-pass methodology (Pass 0 through Pass 5)

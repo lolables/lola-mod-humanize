@@ -163,7 +163,9 @@ tasks:
         for f in reference/ai-vocabulary-watchlist.md reference/structural-patterns.md \
                  reference/code-patterns.md reference/methodology.md \
                  reference/courtesy.md reference/writing-discipline.md \
+                 reference/clarity.md \
                  module/skills/humanize/reference/writing-discipline.md \
+                 module/skills/humanize/reference/clarity.md \
                  module/AGENTS.md \
                  module/skills/humanize/SKILL.md \
                  module/skills/voice-profile-generator/SKILL.md \
