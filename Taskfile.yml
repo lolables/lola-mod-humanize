@@ -227,11 +227,14 @@ tasks:
 
   voices:
     desc: Manage installed voice profiles (ls, cat, path, rm, check)
+    # Runs in the caller's directory so "project root" means the repo you
+    # invoked task from, not this one.
+    dir: '{{.USER_WORKING_DIR}}'
     cmds:
       - |
         PY=python3
-        [ -x .venv/bin/python3 ] && PY=.venv/bin/python3
-        $PY {{.S}}/manage-voices.py {{.CLI_ARGS}}
+        [ -x "{{.ROOT_DIR}}/.venv/bin/python3" ] && PY="{{.ROOT_DIR}}/.venv/bin/python3"
+        "$PY" "{{.ROOT_DIR}}/{{.S}}/manage-voices.py" {{.CLI_ARGS}}
 
   eval:
     desc: 'Run Humanize evaluation across Ollama models. VERBOSE=true for detail.'

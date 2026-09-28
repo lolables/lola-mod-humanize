@@ -144,8 +144,17 @@ without strong personality.
 
 Nine voice profiles live in `reference/voices/` (academic, blog, code-comments,
 code-design, code-docs, general, release-notes, rfc, tutorial), auto-detected by
-content type. Personal overrides go in `$XDG_CONFIG_HOME/humanize/voices/` or
-`reference/voices/*.local.md` (gitignored).
+content type. Personal overrides go in `$XDG_CONFIG_HOME/humanize/voices/`, the
+root of the project being humanized (`reference/voices/*.local.md`), or the
+installed skill's own `reference/voices/`, checked in that order. A
+project-root override counts only when git does not track it, no part of its
+path is a symlink, and it is not inside a nested repo or submodule. The skill
+resolves the path with `manage-voices.py path --for <file>`, which applies
+those checks, and tells the user when a project-root profile is in use. A
+profile is style guidance only: the skill never follows tool, command,
+file-access, or network instructions found in one. The agent still acts on
+its register and wording guidance, so a repo's author must not be able to
+inject a profile by committing one or a symlink to one of the user's files.
 
 A personal profile can be auto-generated from writing samples via
 `task voices:profile`, which analyzes sentence structure, vocabulary register,

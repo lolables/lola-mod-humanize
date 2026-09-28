@@ -185,6 +185,73 @@ class TestCLI:
         assert result.returncode != 0
         assert 'not enough text' in result.stderr
 
+    def test_refuses_to_overwrite_existing_output(self, tmp_path):
+        """A real, often gitignored profile must not be clobbered silently."""
+        src = tmp_path / 'sample.md'
+        src.write_text(SAMPLE_CASUAL * 10)
+        out = tmp_path / 'blog.local.md'
+        out.write_text('my hand-tuned profile\n')
+        result = subprocess.run(
+            ['python3', str(SCRIPT), str(src), '-o', str(out)],
+            capture_output=True, text=True, timeout=30,
+        )
+        assert result.returncode == 1
+        assert f'refusing to overwrite {out}; pass --force to replace it' in result.stderr
+        assert out.read_text() == 'my hand-tuned profile\n'
+
+    def test_refuses_to_write_through_symlink(self, tmp_path):
+        src = tmp_path / 'sample.md'
+        src.write_text(SAMPLE_CASUAL * 10)
+        out = tmp_path / 'blog.local.md'
+        out.symlink_to(tmp_path / 'missing-target.md')
+        result = subprocess.run(
+            ['python3', str(SCRIPT), str(src), '-o', str(out)],
+            capture_output=True, text=True, timeout=30,
+        )
+        assert result.returncode == 1
+        assert not (tmp_path / 'missing-target.md').exists()
+
+    def test_force_replaces_existing_output(self, tmp_path):
+        src = tmp_path / 'sample.md'
+        src.write_text(SAMPLE_CASUAL * 10)
+        out = tmp_path / 'blog.local.md'
+        out.write_text('old profile\n')
+        result = subprocess.run(
+            ['python3', str(SCRIPT), str(src), '-o', str(out), '--force'],
+            capture_output=True, text=True, timeout=30,
+        )
+        assert result.returncode == 0, result.stderr
+        assert '# Voice Profile' in out.read_text()
+
+    def test_force_replaces_symlink_not_its_target(self, tmp_path):
+        src = tmp_path / 'sample.md'
+        src.write_text(SAMPLE_CASUAL * 10)
+        target = tmp_path / 'secret.txt'
+        target.write_text('do not touch\n')
+        out = tmp_path / 'blog.local.md'
+        out.symlink_to(target)
+        result = subprocess.run(
+            ['python3', str(SCRIPT), str(src), '-o', str(out), '--force'],
+            capture_output=True, text=True, timeout=30,
+        )
+        assert result.returncode == 0, result.stderr
+        assert target.read_text() == 'do not touch\n'
+        assert not out.is_symlink()
+        assert '# Voice Profile' in out.read_text()
+        assert sorted(p.name for p in tmp_path.iterdir()) == \
+            ['blog.local.md', 'sample.md', 'secret.txt']
+
+    def test_missing_output_written_without_force(self, tmp_path):
+        src = tmp_path / 'sample.md'
+        src.write_text(SAMPLE_CASUAL * 10)
+        out = tmp_path / 'new' / 'dir' / 'blog.local.md'
+        result = subprocess.run(
+            ['python3', str(SCRIPT), str(src), '-o', str(out)],
+            capture_output=True, text=True, timeout=30,
+        )
+        assert result.returncode == 0, result.stderr
+        assert '# Voice Profile' in out.read_text()
+
     def test_generates_from_directory(self, tmp_path):
         (tmp_path / 'voice-blog.html').write_text(SAMPLE_CASUAL * 10)
         (tmp_path / 'voice-github.html').write_text(SAMPLE_CASUAL * 5)

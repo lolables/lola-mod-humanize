@@ -1,5 +1,6 @@
 """Tests for voice discovery and the deepened profile template."""
 import importlib.util
+import re
 import subprocess
 from pathlib import Path
 
@@ -173,3 +174,24 @@ def test_new_voice_exists_and_symlinked(name):
     link = REPO / "module" / "skills" / "humanize" / "reference" / "voices" / f"{name}.md"
     assert link.is_symlink()
     assert link.resolve() == canonical.resolve()
+
+
+HEADING_STYLES = {
+    "academic": "noun-phrase", "blog": "assertion", "code-docs": "noun-phrase",
+    "general": "noun-phrase", "release-notes": "noun-phrase", "rfc": "noun-phrase",
+    "tutorial": "noun-phrase",
+}
+
+
+@pytest.mark.parametrize("name,style", sorted(HEADING_STYLES.items()))
+def test_text_voice_sets_heading_keys(name, style):
+    text = (VOICES_DIR / f"{name}.md").read_text()
+    assert re.search(rf"^heading_style:\s+{style}$", text, re.M)
+    assert re.search(r"^heading_case:\s+title$", text, re.M)
+
+
+@pytest.mark.parametrize("name", ["code-comments", "code-design"])
+def test_code_voice_has_no_heading_keys(name):
+    text = (VOICES_DIR / f"{name}.md").read_text()
+    assert "heading_style:" not in text
+    assert "heading_case:" not in text

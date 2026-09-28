@@ -6,10 +6,17 @@
 # Create the directory:
 #   mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}/humanize/voices"
 #
+# A copy at the root of the project you're humanizing also works, at
+# <project-root>/reference/voices/<profile>.local.md, where <project-root>
+# is that project's git top level. Use this for a profile specific to one
+# project on your machine, and gitignore it. The file is skipped if git
+# tracks it or any part of its path is a symlink: the agent follows this
+# file as instructions, so a repo's author must not be able to plant one.
+#
 # A copy alongside the installed skill also works, at
 # <skill-dir>/reference/voices/<profile>.local.md, but the config directory
 # above survives reinstalling the skill and is the better home for a profile
-# you plan to keep.
+# you plan to keep across every project.
 #
 # This overrides the built-in profile for that content type only.
 # Other profiles are unaffected.
@@ -101,3 +108,5 @@
 # second_person_per_1k: 
 # contraction_per_1k: 
 # em_dash_per_1k: 0
+# heading_style: noun-phrase    (or: assertion)
+# heading_case: title           (or: sentence)

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-analyze-voice.py -- Analyze writing samples and generate a voice profile.
+analyze-voice.py: analyze writing samples and generate a voice profile.
 
 Reads extracted text from personal sources (output of extract-text.py or
 the fetch pipeline), computes statistical voice metrics, and generates
 a draft voice-profile.local.md.
 
 Usage:
-    python3 scripts/analyze-voice.py <input_dir_or_file> [--output <path>]
+    python3 scripts/analyze-voice.py <input_dir_or_file> [--output <path>] [--force]
 
 The input can be:
   - A directory of .html files (from the fetch pipeline's FETCH_DIR)
@@ -24,6 +24,7 @@ import math
 import os
 import re
 import sys
+import tempfile
 from collections import Counter
 from pathlib import Path
 from textwrap import dedent
@@ -532,6 +533,8 @@ def main():
     parser.add_argument('--output', '-o',
                         default=default_output,
                         help='Output path (default: XDG voices dir or reference/voices/)')
+    parser.add_argument('--force', action='store_true',
+                        help='Replace the output file if it already exists')
     args = parser.parse_args()
 
     source = Path(args.source)
@@ -553,7 +556,28 @@ def main():
 
     out_path = Path(args.output)
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(profile)
+    # A profile at the output path is usually hand-tuned and gitignored, so
+    # replacing it is unrecoverable. Mode 'x' refuses any existing entry,
+    # including a symlink, in the same call that creates the file. --force
+    # renames a temp file over the path, which replaces a symlink itself
+    # instead of writing through it to whatever it points at.
+    if args.force:
+        fd, tmp = tempfile.mkstemp(dir=out_path.parent, prefix=f'.{out_path.name}.')
+        try:
+            with os.fdopen(fd, 'w') as f:
+                f.write(profile)
+            os.replace(tmp, out_path)
+        except BaseException:
+            os.unlink(tmp)
+            raise
+    else:
+        try:
+            with open(out_path, 'x') as f:
+                f.write(profile)
+        except FileExistsError:
+            print(f'refusing to overwrite {out_path}; pass --force to replace it',
+                  file=sys.stderr)
+            sys.exit(1)
     print(f'Draft voice profile written to: {out_path}', file=sys.stderr)
     print(f'Review and edit the generated profile, especially sections marked <!-- EDIT -->',
           file=sys.stderr)

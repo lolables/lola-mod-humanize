@@ -75,7 +75,7 @@ refinement, and writes profile files that the Humanize skill loads at runtime.
 
    ```bash
    python3 "$SKILL_DIR/scripts/analyze-voice.py" .test-output/voice-gen/ \
-       -o .test-output/voice-gen/draft-<type>.local.md
+       -o .test-output/voice-gen/draft-<type>.local.md --force
    ```
 
    The script prints only progress lines to stderr. Everything of value goes
@@ -86,9 +86,10 @@ refinement, and writes profile files that the Humanize skill loads at runtime.
 
    Always pass `-o`. The default is
    `$XDG_CONFIG_HOME/humanize/voices/blog.local.md` whenever that directory
-   already exists, so running the script bare overwrites the user's existing
-   blog profile without warning. Keeping Phase 1 output inside
-   `.test-output/voice-gen/` makes that impossible.
+   already exists, which is usually the user's real blog profile. The script
+   refuses to replace an existing file unless you pass `--force`. Pass
+   `--force` only for the scratch draft above, never for a path outside
+   `.test-output/voice-gen/`.
 
    Treat the draft as raw input for Phase 2, not as a finished profile. Its
    headings already match the ten that `reference/profile-schema.md` requires.
@@ -217,6 +218,8 @@ mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}/humanize/voices"
 
 Write each profile to
 `${XDG_CONFIG_HOME:-$HOME/.config}/humanize/voices/<type>.local.md`.
+If that file already exists, ask the user before replacing it; it may be a
+hand-tuned profile with no other copy.
 
 This is the user-global path that the Humanize skill loads first. It works
 in every project directory, not just this repo.

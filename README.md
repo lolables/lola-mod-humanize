@@ -196,6 +196,15 @@ You can also point directly at a file or directory:
 task voices:profile FROM=~/writing/blog-posts/
 ```
 
+If the output file already exists, the task refuses to replace it and exits
+with an error. Pass `--force` to overwrite it, or `--output` to write
+somewhere else:
+
+```bash
+task voices:profile -- --force
+task voices:profile -- --output /tmp/blog-draft.local.md
+```
+
 ### Option B: Write it manually
 
 Copy `reference/voices/local.example.md` to
@@ -205,14 +214,41 @@ the profile type; a file named plain `local.md` is never read.
 
 ### Config file locations
 
-Humanize checks for user config in this order:
+Humanize checks for a voice override in this order:
 
 1. `$XDG_CONFIG_HOME/humanize/voices/` (defaults to `~/.config/humanize/voices/`)
-2. Repo-local paths (`reference/voices/*.local.md`, `personal-sources.yml`)
+2. `reference/voices/` at the root of the project you're humanizing (the
+   directory `git rev-parse --show-toplevel` reports for the file, or for
+   the cwd if you pasted the text in), untracked non-symlink files only
+3. `reference/voices/` inside the installed Humanize skill itself
 
-The XDG path is recommended because it works across all Humanize-enabled
-repos. Repo-local files are gitignored and work if you prefer per-project
-configuration.
+The first `<type>.local.md` found wins. When the file being humanized is inside
+a git worktree or submodule, that worktree or submodule is the project root,
+not the superproject.
+
+The agent reads a voice profile into its prompt as style guidance, so a project-root override
+counts only if git does not track it, no part of its path is a symlink, and it
+does not sit inside a nested repo or submodule of the project. Otherwise
+anyone who controls a repo you clone could plant a profile, or a symlink to
+one of your local files, and steer the agent. The tracked check ignores case,
+for case-insensitive filesystems, and runs git with the repo's
+`core.fsmonitor` program disabled. A rejected file is skipped, and
+`task voices -- ls`, `path`, and `check` name it and say why.
+
+Pick the location based on scope:
+
+- **XDG** for a voice you want on every project. This is the recommended
+  default; it survives reinstalling the skill and follows you across repos.
+- **Project root** for a voice specific to one project on your machine.
+  Keep it untracked; gitignore it so it stays out of commits. Each
+  collaborator creates their own copy.
+- **Skill directory** for a voice tied to one Humanize install, not the
+  project or your user account.
+
+Separately, `personal-sources.yml` (writing samples used by `task sources`)
+follows its own, narrower lookup: `$XDG_CONFIG_HOME/humanize/` first, then
+this repository's own root. It is not part of the voice override chain
+above.
 
 ### Supported document formats for local sources
 
@@ -277,17 +313,31 @@ task voices -- cat --builtin blog  # print the built-in, ignoring overrides
 task voices -- path blog       # print filesystem path to active profile
 task voices -- check           # validate all installed overrides
 task voices -- check blog      # validate a specific override
-task voices -- rm blog         # remove your blog override, revert to built-in
+task voices -- rm blog         # remove the active blog override (asks first)
+task voices -- rm blog --yes   # same, without asking; required from scripts and agents
+task voices -- path blog --for ~/src/site/posts/new.md  # resolve for another repo's file
 ```
+
+`task voices` runs in the directory you call it from, so "project root" means
+the repo you are in. `--for <file-or-dir>` finds the project root from that
+path instead; every subcommand accepts it. Pass the file being humanized and
+the project override resolves the same way from any directory.
+
+`rm` deletes the active override, which is often gitignored and cannot be
+recovered. At a terminal it asks before deleting. Anywhere else, including an
+agent session or `--mode llm`, it refuses unless you pass `--yes`.
 
 In this repo the script lives at
 `module/skills/humanize/scripts/manage-voices.py`. Installing the module copies
 it next to the installed `SKILL.md`, so the destination depends on your
 assistant and scope: each assistant has its own skill directory.
 
-It reads and writes user overrides from
-`$XDG_CONFIG_HOME/humanize/voices/` (`~/.config/humanize/voices/` by
-default). Built-in profiles are listed for reference but cannot be
+It resolves each profile with the same lookup as the humanize agent (see
+[Config file locations](#config-file-locations)): `$XDG_CONFIG_HOME/humanize/voices/`
+(`~/.config/humanize/voices/` by default), then an untracked, non-symlink file
+in the project root's `reference/voices/`, then the installed skill's
+`reference/voices/`, then the built-in profile. `rm` removes whichever
+override is active. Built-in profiles are listed for reference but cannot be
 modified through this tool.
 
 All subcommands accept `--mode llm` for pipe-friendly output:

@@ -166,6 +166,19 @@ generator emits these keys, in this order:
 Each line is `key: value`. Keep the key names as the generator spells them so
 a later run can be diffed against this one.
 
+Two optional keys set heading style. The generator does not emit them; add
+them by hand below the generated block, one per line at column 0:
+
+    heading_style: noun-phrase | assertion
+    heading_case:  title | sentence
+
+`noun-phrase` headings are terse labels that read as a table of contents.
+`assertion` headings state the section's claim. `manage-voices.py check`
+rejects any other value. The humanize skill checks each key independently:
+omit `heading_style` and it applies only the prefix and cross-reference
+rules of text pattern #17; omit `heading_case` and it leaves capitalization
+alone.
+
 ## Formatting Rules
 
 - Sections use imperative bullets. Not descriptive prose about the voice, but
