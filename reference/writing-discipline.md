@@ -33,7 +33,7 @@ Phrases -- never use: "It's important to note that", "In today's
 [rich/vibrant]", "commitment to [excellence/innovation]", "rich cultural
 heritage", "plays a [vital/crucial/key] role", "Not just X, but also Y",
 "not only (bare)", "rich tapestry", "In conclusion", "It is worth noting",
-"One might argue", "This raises the question".
+"I want to be clear that", "One might argue", "This raises the question".
 
 Never open a sentence with Additionally, Furthermore, or Moreover.
 <!-- END GENERATED: banned -->

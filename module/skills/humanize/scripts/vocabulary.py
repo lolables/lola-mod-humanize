@@ -71,7 +71,9 @@ BANNED_PHRASES: list[str] = [
     "it's important to note", "in today's", 'serves as a', 'diverse array',
     'boasts a', 'commitment to excellence', 'rich cultural',
     'plays a vital role', 'not just', 'not only', 'rich tapestry',
-    'in conclusion', 'it is worth noting', 'one might argue',
+    'in conclusion', 'it is worth noting', "it's worth noting",
+    'it’s worth noting', 'worth noting:', 'worth noting that',
+    'i want to be clear that', 'one might argue',
     'this raises the question',
 ]
 

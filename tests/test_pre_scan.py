@@ -107,6 +107,25 @@ class TestBannedPhrases:
         bp = [f for f in hits if f['tag'] == 'banned-phrase']
         assert bp[0]['severity'] == 'HIGH'
 
+    def test_worth_noting_contraction(self):
+        for s in ("It's worth noting that the cache is cold.\n",
+                  "It’s worth noting that the cache is cold.\n"):
+            assert 'banned-phrase' in _tags(scan_text(s, "t.md"))
+
+    def test_worth_noting_sentence_initial(self):
+        for s in ("Worth noting: the lockfile pins every transitive dependency.\n",
+                  "The build passed. Worth noting that the cache was cold.\n"):
+            assert 'banned-phrase' in _tags(scan_text(s, "t.md")), s
+
+    def test_worth_noting_negated_or_predicative_not_flagged(self):
+        for s in ("A one-second stall is not worth noting.\n",
+                  "The retry count is worth noting in the runbook.\n"):
+            assert 'banned-phrase' not in _tags(scan_text(s, "t.md")), s
+
+    def test_want_to_be_clear(self):
+        hits = scan_text("I want to be clear that we ship Friday.\n", "t.md")
+        assert 'banned-phrase' in _tags(hits)
+
 
 # -- Check 5: Formulaic transitions --
 
