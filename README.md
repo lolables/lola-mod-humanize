@@ -153,6 +153,7 @@ docs/
   METHODOLOGY.md                 How it works (maintainer docs)
   SOURCES.md                     All research sources with citations
   EVAL-RESULTS.md                Ollama model evaluation results
+  ACCEPTANCE-RESULTS.md          Blind acceptance runs of the full skill on long drafts
 tests/
   text-samples/                  7 before/after text transformation examples
   code-samples/                  4 before/after code transformation examples
